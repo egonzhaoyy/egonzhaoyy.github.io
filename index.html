@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Egonzhao · 个人空间 | 学习、生活与思考</title>
+  <meta name="description" content="记录前端开发、AI探索、阅读笔记与日常生活碎片的极简个人主页。" />
+  <!-- 引入优雅的中英文字体：Inter + Noto Sans SC + Noto Serif SC（阅读衬线体） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- 引入 Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind 配置：支持手动切换深色模式、字体栈与温暖极简色系 -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Inter"', '"Noto Sans SC"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+            serif: ['"Noto Serif SC"', '"Songti SC"', '"STSong"', 'Georgia', 'serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+          colors: {
+            paper: {
+              light: '#FAF9F6',
+              dark: '#111110',
+            },
+            surface: {
+              light: '#FFFFFF',
+              dark: '#1B1A19',
+            },
+          },
+          boxShadow: {
+            soft: '0 4px 20px -2px rgba(28, 25, 23, 0.05)',
+            'soft-dark': '0 4px 24px -2px rgba(0, 0, 0, 0.35)',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-paper-light text-stone-800 dark:bg-paper-dark dark:text-stone-200 font-sans antialiased selection:bg-amber-200/70 selection:text-stone-900 dark:selection:bg-amber-500/30 dark:selection:text-amber-100 transition-colors duration-300 overflow-x-hidden">
+
+  <!-- ==================== 顶部毛玻璃导航栏 ==================== -->
+  <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-paper-light/85 dark:bg-paper-dark/85 border-b border-stone-200/70 dark:border-stone-800/80 transition-colors duration-300">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- 个人 Logo / 昵称 -->
+      <a href="#home" class="flex items-center gap-2.5 group focus:outline-none">
+        <span class="w-8 h-8 rounded-xl bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 flex items-center justify-center font-bold text-sm tracking-tight shadow-sm group-hover:scale-105 transition-transform duration-200" id="nav-logo-badge">E</span>
+        <span class="font-semibold text-base tracking-tight text-stone-900 dark:text-stone-100" id="nav-brand-name">Egonzhao</span>
+        <span class="hidden sm:inline-block text-xs text-stone-400 dark:text-stone-500 font-normal">/ Digital Garden</span>
+      </a>
+
+      <!-- 桌面端导航链接 -->
+      <nav class="hidden md:flex items-center gap-1" aria-label="主导航">
+        <a href="#home" class="px-3.5 py-2 rounded-xl text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 dark:text-stone-400 dark:hover:text-stone-100 dark:hover:bg-stone-800/60 transition-colors">关于</a>
+        <a href="#study" class="px-3.5 py-2 rounded-xl text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 dark:text-stone-400 dark:hover:text-stone-100 dark:hover:bg-stone-800/60 transition-colors">学习</a>
+        <a href="#life" class="px-3.5 py-2 rounded-xl text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 dark:text-stone-400 dark:hover:text-stone-100 dark:hover:bg-stone-800/60 transition-colors">生活</a>
+        <a href="#novels" class="px-3.5 py-2 rounded-xl text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 dark:text-stone-400 dark:hover:text-stone-100 dark:hover:bg-stone-800/60 transition-colors">小说</a>
+      </nav>
+
+      <!-- 右侧操作区：深浅模式切换 + 移动端汉堡按钮 -->
+      <div class="flex items-center gap-2">
+        <button
+          id="theme-toggle-btn"
+          type="button"
+          aria-label="切换深色或浅色模式"
+          class="p-2.5 rounded-xl border border-stone-200/80 dark:border-stone-800 bg-surface-light dark:bg-surface-dark text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 hover:border-stone-300 dark:hover:border-stone-700 transition-all duration-200 active:scale-95"
+        >
+          <!-- 太阳图标（深色模式下显示） -->
+          <svg id="icon-sun" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <!-- 月亮图标（浅色模式下显示） -->
+          <svg id="icon-moon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+
+        <!-- 移动端汉堡菜单按钮 -->
+        <button
+          id="mobile-menu-btn"
+          type="button"
+          aria-label="打开导航菜单"
+          aria-expanded="false"
+          class="md:hidden p-2.5 rounded-xl border border-stone-200/80 dark:border-stone-800 bg-surface-light dark:bg-surface-dark text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 transition-all active:scale-95"
+        >
+          <svg id="icon-menu-open" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="icon-menu-close" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 移动端折叠菜单面板 -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-stone-200/70 dark:border-stone-800/80 bg-paper-light/95 dark:bg-paper-dark/95 backdrop-blur-md">
+      <nav class="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-1">
+        <a href="#home" class="mobile-nav-link px-4 py-3 rounded-xl text-sm font-medium text-stone-700 dark:text-stone-200 hover:bg-stone-200/60 dark:hover:bg-stone-800/70 transition-colors">关于 · About</a>
+        <a href="#study" class="mobile-nav-link px-4 py-3 rounded-xl text-sm font-medium text-stone-700 dark:text-stone-200 hover:bg-stone-200/60 dark:hover:bg-stone-800/70 transition-colors">学习 · Study</a>
+        <a href="#life" class="mobile-nav-link px-4 py-3 rounded-xl text-sm font-medium text-stone-700 dark:text-stone-200 hover:bg-stone-200/60 dark:hover:bg-stone-800/70 transition-colors">生活 · Life</a>
+        <a href="#novels" class="mobile-nav-link px-4 py-3 rounded-xl text-sm font-medium text-stone-700 dark:text-stone-200 hover:bg-stone-200/60 dark:hover:bg-stone-800/70 transition-colors">小说作品集 · Novels</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== 主内容容器 ==================== -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+
+    <!-- 1. 个人简介 Hero 区域 -->
+    <section id="home" class="pt-12 sm:pt-20 pb-16 sm:pb-24 scroll-mt-16">
+      <div class="bg-surface-light dark:bg-surface-dark border border-stone-200/80 dark:border-stone-800/90 rounded-3xl p-6 sm:p-10 md:p-12 shadow-soft dark:shadow-soft-dark">
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-10">
+          <!-- 头像 -->
+          <div class="relative shrink-0 group">
+            <img
+              id="hero-avatar"
+              src=""
+              alt="Egonzhao 动漫头像"
+              class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-2 border-stone-100 dark:border-stone-800 shadow-md group-hover:scale-105 group-hover:-rotate-2 group-hover:shadow-xl transition-all duration-300 ease-out cursor-pointer"
+            />
+            <span class="absolute -bottom-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark ring-2 ring-surface-light dark:ring-surface-dark transition-transform duration-300 group-hover:scale-110">
+              <span class="h-3 w-3 rounded-full bg-emerald-500"></span>
+            </span>
+          </div>
+
+          <!-- 文本介绍 -->
+          <div class="flex-1 space-y-4">
+            <!-- 状态标签组 -->
+            <div id="hero-status-tags" class="flex flex-wrap items-center gap-2"></div>
+
+            <!-- 昵称与标语 -->
+            <div>
+              <h1 class="text-2xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-50" id="hero-name"></h1>
+              <p class="mt-2.5 text-base sm:text-lg text-stone-600 dark:text-stone-400 leading-relaxed max-w-2xl" id="hero-bio"></p>
+            </div>
+
+            <!-- 行动按钮与社交图标 -->
+            <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+              <div class="flex flex-wrap items-center gap-2.5">
+                <a
+                  href="#novels"
+                  class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 text-sm font-medium hover:bg-stone-800 dark:hover:bg-white transition-all shadow-sm active:scale-[0.98]"
+                >
+                  <span>阅读小说</span>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+                <a
+                  href="https://github.com/Egonzhao"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/70 dark:bg-stone-800/50 text-stone-700 dark:text-stone-200 text-sm font-medium hover:bg-stone-100 dark:hover:bg-stone-800 transition-all active:scale-[0.98]"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  <span>GitHub</span>
+                </a>
+                <button
+                  id="hero-copy-email-btn"
+                  type="button"
+                  class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/70 dark:bg-stone-800/50 text-stone-700 dark:text-stone-200 text-sm font-medium hover:bg-stone-100 dark:hover:bg-stone-800 transition-all active:scale-[0.98]"
+                >
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                  <span>复制邮箱</span>
+                </button>
+              </div>
+
+              <!-- 社交媒体链接容器 -->
+              <div id="hero-socials" class="flex items-center gap-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 「学习 · Study」模块 -->
+    <section id="study" class="py-12 sm:py-16 scroll-mt-16 border-t border-stone-200/70 dark:border-stone-800/70">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8 sm:mb-10">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-1.5">Study & Growth</p>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 dark:text-stone-50">学习 · Study</h2>
+        </div>
+        <p class="text-sm text-stone-500 dark:text-stone-400">保持好奇，用复利的方式积累认知与技能。</p>
+      </div>
+
+      <!-- 正在学习的技能与方向 -->
+      <div class="mb-10">
+        <h3 class="text-sm font-semibold text-stone-700 dark:text-stone-300 mb-4 flex items-center gap-2">
+          <span class="w-1.5 h-4 rounded-full bg-amber-500"></span>
+          当前学习路线
+        </h3>
+        <div id="study-skills-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- 近期书单与学习笔记 -->
+      <div>
+        <h3 class="text-sm font-semibold text-stone-700 dark:text-stone-300 mb-4 flex items-center gap-2">
+          <span class="w-1.5 h-4 rounded-full bg-emerald-500"></span>
+          近期书单与笔记
+        </h3>
+        <div id="study-books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- 3. 「生活 · Life」模块 (Bento Grid 便当盒网格) -->
+    <section id="life" class="py-12 sm:py-16 scroll-mt-16 border-t border-stone-200/70 dark:border-stone-800/70">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8 sm:mb-10">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-1.5">Moments & Aesthetics</p>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 dark:text-stone-50">生活 · Life</h2>
+        </div>
+        <p class="text-sm text-stone-500 dark:text-stone-400">点击任意卡片，查看完整照片与背后的生活随笔。</p>
+      </div>
+
+      <!-- Bento Grid 容器 -->
+      <div id="life-bento-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 auto-rows-[230px] gap-4"></div>
+    </section>
+
+    <!-- 4. 「小说作品集 · Novels」模块（四大分类入口卡片） -->
+    <section id="novels" class="py-12 sm:py-16 scroll-mt-16 border-t border-stone-200/70 dark:border-stone-800/70">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-1.5">Fiction & Stories</p>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 dark:text-stone-50">小说作品集 · Novels</h2>
+          <p class="mt-1.5 text-sm text-stone-500 dark:text-stone-400">选择一个分类，进入专属选篇与沉浸式阅读空间。</p>
+        </div>
+
+        <!-- 本地文件夹载入按钮（方便在上传 GitHub Pages 前直接本地阅读预览） -->
+        <div class="flex items-center gap-2.5">
+          <input
+            id="local-novel-folder-input"
+            type="file"
+            webkitdirectory
+            directory
+            multiple
+            accept=".txt"
+            class="hidden"
+          />
+          <button
+            id="load-local-folder-btn"
+            type="button"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium border border-stone-200/90 dark:border-stone-700 bg-surface-light dark:bg-surface-dark text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all shadow-soft dark:shadow-soft-dark active:scale-[0.98]"
+          >
+            <svg class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+            </svg>
+            <span>加载本地小说文件夹预览</span>
+            <span id="local-loaded-badge" class="hidden px-2 py-0.5 rounded-md text-[11px] font-mono bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 四大分类入口卡片网格（桌面端 2x2，移动端单列） -->
+      <div id="novel-categories-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </section>
+
+  </main>
+
+  <!-- ==================== 极简页脚 ==================== -->
+  <footer class="border-t border-stone-200/70 dark:border-stone-800/80 py-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-stone-500 dark:text-stone-400">
+      <p>&copy; <span id="footer-year">2026</span> <span id="footer-name" class="font-medium text-stone-700 dark:text-stone-300">Egonzhao</span>. Built with simplicity for GitHub Pages.</p>
+      <div class="flex items-center gap-4">
+        <a href="#home" class="hover:text-stone-900 dark:hover:text-stone-100 transition-colors">回到顶部 ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== 弹窗：生活碎片大图与随笔预览 ==================== -->
+  <div
+    id="life-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="life-modal-title"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-stone-950/65 backdrop-blur-sm"
+  >
+    <div class="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-surface-light dark:bg-surface-dark border border-stone-200/80 dark:border-stone-800 shadow-2xl">
+      <button
+        id="life-modal-close"
+        type="button"
+        aria-label="关闭生活随笔弹窗"
+        class="absolute top-4 right-4 z-10 p-2 rounded-full bg-stone-900/60 text-white hover:bg-stone-900/80 backdrop-blur-md transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="aspect-[16/10] w-full overflow-hidden bg-stone-100 dark:bg-stone-900">
+        <img id="life-modal-img" src="" alt="" class="w-full h-full object-cover" />
+      </div>
+
+      <div class="p-6 sm:p-8 space-y-4">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span id="life-modal-category" class="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-medium"></span>
+          <span id="life-modal-meta" class="text-stone-400 dark:text-stone-500"></span>
+        </div>
+        <h3 id="life-modal-title" class="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-50"></h3>
+        <div id="life-modal-essay" class="space-y-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 全屏沉浸式界面：分类选篇与小说阅读器 ==================== -->
+  <div
+    id="novel-reader-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="reader-story-title"
+    class="fixed inset-0 z-50 hidden flex-col bg-paper-light dark:bg-paper-dark text-stone-800 dark:text-stone-200 transition-opacity duration-200"
+  >
+    <!-- 顶部固定工具栏 -->
+    <header class="shrink-0 relative z-20 border-b border-stone-200/80 dark:border-stone-800 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md">
+      <div class="px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
+        <!-- 左侧：返回主页 + 移动端目录抽屉按钮 + 当前分类标题 -->
+        <div class="flex items-center gap-1.5 sm:gap-3 min-w-0">
+          <button
+            id="reader-back-btn"
+            type="button"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors active:scale-95 shrink-0"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span class="hidden sm:inline">返回主页</span>
+            <span class="sm:hidden">返回</span>
+          </button>
+
+          <!-- 移动端目录展开按钮 -->
+          <button
+            id="reader-sidebar-toggle"
+            type="button"
+            aria-label="打开篇目目录"
+            class="md:hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border border-stone-200 dark:border-stone-700 bg-paper-light dark:bg-paper-dark text-stone-700 dark:text-stone-200 active:scale-95 shrink-0"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h12M4 18h8" />
+            </svg>
+            <span>目录</span>
+          </button>
+
+          <span class="hidden lg:inline-block h-4 w-px bg-stone-200 dark:bg-stone-700"></span>
+          <span id="reader-topbar-category-title" class="hidden lg:inline-block text-sm font-semibold text-stone-900 dark:text-stone-100 truncate"></span>
+        </div>
+
+        <!-- 中部：桌面端快捷分类切换 Pills -->
+        <div id="reader-category-switcher" class="hidden xl:flex items-center gap-1.5"></div>
+
+        <!-- 右侧：本地导入 + 字号调节 + 深浅主题同步 -->
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <!-- 本地文件未载入时的快捷按钮 -->
+          <button
+            id="reader-load-local-btn"
+            type="button"
+            title="加载本地 ZhaoHang小说合辑 文件夹"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+          >
+            <svg class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+            </svg>
+            <span id="reader-load-local-label">加载本地</span>
+          </button>
+
+          <!-- 字号切换器（小 / 中 / 大） -->
+          <div class="inline-flex items-center p-0.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-paper-light dark:bg-paper-dark" role="group" aria-label="调整正文字号">
+            <button type="button" data-font-size="sm" class="novel-font-btn px-2 sm:px-2.5 py-1 rounded-lg text-xs font-medium transition-colors">小</button>
+            <button type="button" data-font-size="md" class="novel-font-btn px-2 sm:px-2.5 py-1 rounded-lg text-xs font-medium transition-colors">中</button>
+            <button type="button" data-font-size="lg" class="novel-font-btn px-2 sm:px-2.5 py-1 rounded-lg text-xs font-medium transition-colors">大</button>
+          </div>
+
+          <!-- 同步主站的深浅色切换按钮 -->
+          <button
+            id="reader-theme-toggle-btn"
+            type="button"
+            aria-label="切换阅读深浅色模式"
+            class="p-2 rounded-xl border border-stone-200/80 dark:border-stone-700 bg-paper-light dark:bg-paper-dark text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 transition-all active:scale-95"
+          >
+            <svg id="reader-icon-sun" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="reader-icon-moon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 中小屏快捷分类切换条 -->
+      <div id="reader-category-switcher-compact" class="xl:hidden px-3 sm:px-6 pb-2.5 flex items-center gap-1.5 overflow-x-auto"></div>
+
+      <!-- 顶部细阅读进度条 -->
+      <div class="absolute bottom-0 left-0 h-0.5 bg-amber-500 transition-all duration-150" id="novel-reading-progress" style="width: 0%;"></div>
+    </header>
+
+    <!-- 主体双栏区域：左侧篇目目录 + 右侧沉浸阅读区 -->
+    <div class="flex-1 flex min-h-0 relative overflow-hidden">
+      <!-- 移动端侧边栏遮罩 -->
+      <div id="reader-sidebar-backdrop" class="fixed inset-0 z-30 bg-stone-950/50 backdrop-blur-[2px] hidden md:hidden"></div>
+
+      <!-- 左侧边栏：当前分类的全部短篇 / 章节目录 -->
+      <aside
+        id="reader-sidebar"
+        class="fixed md:static inset-y-0 left-0 z-40 w-72 lg:w-80 shrink-0 border-r border-stone-200/80 dark:border-stone-800 bg-surface-light dark:bg-surface-dark flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out"
+      >
+        <div class="p-4 sm:p-5 border-b border-stone-200/70 dark:border-stone-800/80 flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h2 id="reader-sidebar-title" class="text-base font-bold text-stone-900 dark:text-stone-100 truncate"></h2>
+              <span id="reader-sidebar-count" class="px-2 py-0.5 rounded-md text-[11px] font-mono bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 shrink-0"></span>
+            </div>
+            <p id="reader-sidebar-tagline" class="mt-1 text-xs text-stone-500 dark:text-stone-400 line-clamp-1"></p>
+          </div>
+          <button
+            id="reader-sidebar-close"
+            type="button"
+            aria-label="关闭目录"
+            class="md:hidden p-1.5 rounded-lg text-stone-400 hover:text-stone-800 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- 篇目列表容器 -->
+        <nav id="reader-story-list" aria-label="篇目目录" class="flex-1 overflow-y-auto p-3 space-y-1"></nav>
+      </aside>
+
+      <!-- 右侧主阅读区 -->
+      <main id="novel-reader-scroll" class="flex-1 overflow-y-auto scroll-smooth bg-paper-light dark:bg-paper-dark">
+        <div class="max-w-[720px] mx-auto px-5 sm:px-10 py-8 sm:py-12">
+          <!-- 篇目标题与元信息 -->
+          <header class="mb-8 pb-6 border-b border-stone-200/80 dark:border-stone-800/80">
+            <div class="flex flex-wrap items-center gap-2 text-xs mb-3">
+              <span id="reader-story-badge" class="px-2.5 py-1 rounded-lg font-medium"></span>
+              <span id="reader-story-meta" class="text-stone-400 dark:text-stone-500"></span>
+            </div>
+            <h1 id="reader-story-title" class="text-2xl sm:text-3xl font-bold text-stone-900 dark:text-stone-50 tracking-tight leading-snug"></h1>
+          </header>
+
+          <!-- TXT 正文排版容器 -->
+          <article id="novel-reader-body" class="space-y-5 font-serif text-stone-700 dark:text-stone-300 text-base leading-[1.9]"></article>
+
+          <!-- 底部上一篇 / 下一篇导航 -->
+          <nav class="mt-14 pt-8 border-t border-stone-200/80 dark:border-stone-800/80 grid grid-cols-1 sm:grid-cols-2 gap-3" aria-label="章节切换">
+            <button
+              id="reader-prev-btn"
+              type="button"
+              class="group text-left p-4 rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-surface-light dark:bg-surface-dark hover:border-stone-300 dark:hover:border-stone-600 disabled:opacity-40 disabled:pointer-events-none transition-all"
+            >
+              <span id="reader-prev-hint" class="block text-[11px] text-stone-400 dark:text-stone-500 mb-1">上一篇</span>
+              <span id="reader-prev-title" class="block text-sm font-semibold text-stone-800 dark:text-stone-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 truncate transition-colors"></span>
+            </button>
+
+            <button
+              id="reader-next-btn"
+              type="button"
+              class="group text-left sm:text-right p-4 rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-surface-light dark:bg-surface-dark hover:border-stone-300 dark:hover:border-stone-600 disabled:opacity-40 disabled:pointer-events-none transition-all"
+            >
+              <span id="reader-next-hint" class="block text-[11px] text-stone-400 dark:text-stone-500 mb-1">下一篇</span>
+              <span id="reader-next-title" class="block text-sm font-semibold text-stone-800 dark:text-stone-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 truncate transition-colors"></span>
+            </button>
+          </nav>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== 轻提示 Toast ==================== -->
+  <div
+    id="toast"
+    role="status"
+    aria-live="polite"
+    class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 text-xs sm:text-sm font-medium shadow-lg opacity-0 pointer-events-none translate-y-3 transition-all duration-300"
+  ></div>
+
+  <!-- ==================== 数据配置与交互逻辑 ==================== -->
+  <script>
+    /**
+     * ============================================================================
+     *  SITE_DATA 个人站点配置中心
+     *  提示：部署到 GitHub Pages 后，只需修改下方对象中的文字、图片和文章内容，
+     *       无需改动任何 HTML 结构即可完成个人主页更新！
+     * ============================================================================
+     */
+    const SITE_DATA = {
+      // 1. 个人基础资料
+      profile: {
+        logoChar: 'E',
+        name: 'Egonzhao',
+        bio: '独立开发者与终身学习者。热衷于构建简洁优雅的 Web 产品、探索 AI 应用边界，也在城市的黄昏与一杯手冲咖啡里收集生活微光。',
+        // 部署到 GitHub Pages 时，请将保存的头像重命名为 avatar.jpg 并上传至同级目录，然后将下方路径替换为 './avatar.jpg'
+        avatar: 'watermarked_img_715625990500946290.jpg',
+        email: 'hello@egonzhao.dev',
+        statusTags: [
+          { text: '持续学习中', dotColor: 'bg-emerald-500' },
+          { text: '热爱生活', dotColor: 'bg-amber-500' },
+          { text: '坐标 · 上海', dotColor: 'bg-sky-500' },
+        ],
+        socials: [
+          {
+            name: 'GitHub',
+            type: 'link',
+            url: 'https://github.com/Egonzhao',
+            icon: 'github',
+          },
+          {
+            name: '复制邮箱 (hello@egonzhao.dev)',
+            type: 'email',
+            value: 'hello@egonzhao.dev',
+            icon: 'mail',
+          },
+          {
+            name: 'Bilibili',
+            type: 'link',
+            url: 'https://www.bilibili.com/',
+            icon: 'bilibili',
+          },
+          {
+            name: '小红书',
+            type: 'link',
+            url: 'https://www.xiaohongshu.com/',
+            icon: 'xiaohongshu',
+          },
+        ],
+      },
+
+      // 2. 「学习 · Study」模块数据
+      study: {
+        // 当前学习的技能/方向
+        skills: [
+          {
+            name: '前端工程化与现代 Web',
+            status: '深入实践',
+            progress: 84,
+            description: '聚焦 TypeScript 类型体操、Vite 构建优化、React 服务端组件与无障碍交互设计。',
+            colorClass: 'bg-stone-900 dark:bg-stone-100',
+          },
+          {
+            name: 'AI 应用开发与工作流',
+            status: '重点探索',
+            progress: 68,
+            description: '研究 RAG 检索增强、Agent 编排以及如何用大模型打造轻量级个人效率工具。',
+            colorClass: 'bg-amber-500',
+          },
+          {
+            name: '英语原版书与播客精读',
+            status: '每日打卡',
+            progress: 52,
+            description: '坚持每天 30 分钟精读英文技术博客与非虚构原版书，积累地道表达。',
+            colorClass: 'bg-emerald-500',
+          },
+          {
+            name: '设计系统与交互美学',
+            status: '稳步推进',
+            progress: 75,
+            description: '学习排版网格、微动效设计原则以及极简产品的视觉层次构建方法。',
+            colorClass: 'bg-indigo-500',
+          },
+        ],
+        // 近期书单与学习笔记
+        books: [
+          {
+            title: '设计心理学',
+            author: '唐·诺曼',
+            progress: '100%',
+            status: '已读完',
+            note: '好的设计不需要说明书，示能与反馈决定了产品是否让人感到愉悦。',
+          },
+          {
+            title: 'Crafting Interpreters',
+            author: 'Robert Nystrom',
+            progress: '42%',
+            status: '精读中',
+            note: '从零手写一门编程语言的绝佳读物，插图和代码架构都堪称艺术品。',
+          },
+          {
+            title: '纳瓦尔宝典',
+            author: '埃里克·乔根森',
+            progress: '100%',
+            status: '常读常新',
+            note: '代码和媒体是没有许可的杠杆；保持头脑清晰比盲目努力更重要。',
+          },
+          {
+            title: '认知觉醒',
+            author: '周岭',
+            progress: '80%',
+            status: '笔记整理',
+            note: '元认知能力是成长的起点，通过每日复盘和写作让模糊的念头清晰化。',
+          },
+        ],
+      },
+
+      // 3. 「生活 · Life」Bento Grid 数据
+      // spanClass 控制桌面端便当盒网格占位，确保 4 列布局严丝合缝
+      life: [
+        {
+          id: 'city-walk',
+          title: '雨后黄昏的梧桐街',
+          category: '城市漫步摄影',
+          date: '2026年10月 · 上海',
+          summary: '一场阵雨把街道洗得发亮，拿着相机在老洋房街区走了五公里。',
+          image: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1000&q=80',
+          spanClass: 'sm:col-span-2 md:col-span-2 md:row-span-2',
+          essay: [
+            '下午五点半，闷热了一整天的空气终于被一场急雨打散。雨停后，西边的云层裂开一道橘粉色的缝隙，暖光照在湿漉漉的沥青路和梧桐树叶上。',
+            '我喜欢在这个时间点不带目的地出门散步。耳机里没有放音乐，只是听着车轮压过水洼的声音、咖啡馆门口的低语，以及偶尔掠过头顶的晚风。',
+            '很多时候我们写代码、赶进度，生活被切割成一个个待办清单；而城市漫步像是一次主动的“系统重启”，提醒自己世界依然具体而温柔。',
+          ],
+        },
+        {
+          id: 'pour-over-coffee',
+          title: '周末早晨的一杯耶加雪菲',
+          category: '手冲咖啡',
+          date: '2026年11月 · 居家',
+          summary: '91°C 水温、三段式注水，柑橘与白花的香气让清晨慢了下来。',
+          image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80',
+          spanClass: 'sm:col-span-2 md:col-span-2 md:row-span-1',
+          essay: [
+            '最近迷上了浅烘水洗耶加雪菲。周末醒来第一件事不是看手机，而是烧一壶水，慢悠悠地磨好 15 克豆子。',
+            '看着咖啡粉在闷蒸阶段缓缓鼓起一个圆润的“小汉堡”，闻着淡淡的茉莉花与甜橙气息，只需要三分钟，就能给一整天定下从容的基调。',
+          ],
+        },
+        {
+          id: 'weekend-cycling',
+          title: '滨江绿道 32 公里',
+          category: '周末骑行',
+          date: '2026年9月 · 滨江',
+          summary: '迎着江风把烦恼甩在身后，腿酸但心里无比轻盈。',
+          image: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=800&q=80',
+          spanClass: 'sm:col-span-1 md:col-span-1 md:row-span-1',
+          essay: [
+            '周六清晨七点出发，沿着江边绿道一路向南骑行。早上的阳光还不算刺眼，江面泛着细碎的银光。',
+            '骑行最迷人的地方在于专注——你只需要关注眼前的路况、踏频和呼吸，大脑里那些悬而未决的思绪会随着汗水自然消散。',
+          ],
+        },
+        {
+          id: 'night-desk',
+          title: '深夜书桌与暖光台灯',
+          category: '阅读角落',
+          date: '2026年11月 · 书房',
+          summary: '夜深人静时写下几段文字，是留给自己最安静的仪式感。',
+          image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&w=800&q=80',
+          spanClass: 'sm:col-span-1 md:col-span-1 md:row-span-1',
+          essay: [
+            '晚上十一点以后，城市的声音逐渐沉下去，只剩台灯的一圈暖黄光线落在键盘和笔记本上。',
+            '这个安静的角落陪伴我完成了很多短篇构思与技术复盘，也让我明白慢下来才能听见内心的声音。',
+          ],
+        },
+      ],
+
+      // 4. 「小说作品集 · Novels」分类与完整篇目数据（对应 ZhaoHang小说合辑.zip 解压目录）
+      novelCategories: [
+        {
+          id: 'wuxia',
+          name: '武侠短篇',
+          unit: '篇',
+          countLabel: '5 篇短篇',
+          tagline: '江湖风霜、刀光旧事，于市井渡口见人心冷暖。',
+          accent: {
+            badge: 'bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-200/70 dark:border-amber-500/25',
+            iconBg: 'bg-amber-100/80 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300',
+            glow: 'group-hover:border-amber-300/80 dark:group-hover:border-amber-500/40',
+          },
+          iconSvg: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" /></svg>`,
+          previewTitles: ['哑渡', '左手刀', '旧捕头'],
+          stories: [
+            { id: 'wuxia-01', seq: '01', title: '哑渡', path: './ZhaoHang小说合辑/武侠短篇/01-哑渡.txt', bytes: 10308 },
+            { id: 'wuxia-02', seq: '02', title: '左手刀', path: './ZhaoHang小说合辑/武侠短篇/02-左手刀.txt', bytes: 10993 },
+            { id: 'wuxia-03', seq: '03', title: '旧捕头', path: './ZhaoHang小说合辑/武侠短篇/03-旧捕头.txt', bytes: 10707 },
+            { id: 'wuxia-04', seq: '04', title: '残局', path: './ZhaoHang小说合辑/武侠短篇/04-残局.txt', bytes: 10155 },
+            { id: 'wuxia-05', seq: '05', title: '送终', path: './ZhaoHang小说合辑/武侠短篇/05-送终.txt', bytes: 11252 },
+          ],
+        },
+        {
+          id: 'xuanhuan',
+          name: '玄幻短篇',
+          unit: '篇',
+          countLabel: '7 篇短篇',
+          tagline: '志怪奇谈、人间因果，在幽微执念里照见世情。',
+          accent: {
+            badge: 'bg-violet-50 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300 border border-violet-200/70 dark:border-violet-500/25',
+            iconBg: 'bg-violet-100/80 dark:bg-violet-500/15 text-violet-700 dark:text-violet-300',
+            glow: 'group-hover:border-violet-300/80 dark:group-hover:border-violet-500/40',
+          },
+          iconSvg: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>`,
+          previewTitles: ['三两七钱', '剑冢', '第九道雷'],
+          stories: [
+            { id: 'xuanhuan-01', seq: '01', title: '三两七钱', path: './ZhaoHang小说合辑/玄幻短篇/01-三两七钱.txt', bytes: 6878 },
+            { id: 'xuanhuan-02', seq: '02', title: '两碗汤', path: './ZhaoHang小说合辑/玄幻短篇/02-两碗汤.txt', bytes: 6603 },
+            { id: 'xuanhuan-03', seq: '03', title: '剑冢', path: './ZhaoHang小说合辑/玄幻短篇/03-剑冢.txt', bytes: 6387 },
+            { id: 'xuanhuan-04', seq: '04', title: '无脸', path: './ZhaoHang小说合辑/玄幻短篇/04-无脸.txt', bytes: 6808 },
+            { id: 'xuanhuan-05', seq: '05', title: '晚七天', path: './ZhaoHang小说合辑/玄幻短篇/05-晚七天.txt', bytes: 6629 },
+            { id: 'xuanhuan-06', seq: '06', title: '欠条', path: './ZhaoHang小说合辑/玄幻短篇/06-欠条.txt', bytes: 6066 },
+            { id: 'xuanhuan-07', seq: '07', title: '第九道雷', path: './ZhaoHang小说合辑/玄幻短篇/07-第九道雷.txt', bytes: 7547 },
+          ],
+        },
+        {
+          id: 'scifi',
+          name: '科幻短篇',
+          unit: '篇',
+          countLabel: '10 篇短篇',
+          tagline: '时间缝隙、星尘与微光，以理性之尺丈量温柔记忆。',
+          accent: {
+            badge: 'bg-sky-50 dark:bg-sky-500/15 text-sky-700 dark:text-sky-300 border border-sky-200/70 dark:border-sky-500/25',
+            iconBg: 'bg-sky-100/80 dark:bg-sky-500/15 text-sky-700 dark:text-sky-300',
+            glow: 'group-hover:border-sky-300/80 dark:group-hover:border-sky-500/40',
+          },
+          iconSvg: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>`,
+          previewTitles: ['四十三分二十秒', '时间缝里的草莓', '四百公里的喵'],
+          stories: [
+            { id: 'scifi-01', seq: '01', title: '四十三分二十秒', path: './ZhaoHang小说合辑/科幻短篇/01-四十三分二十秒.txt', bytes: 16161 },
+            { id: 'scifi-02', seq: '02', title: '半衰期', path: './ZhaoHang小说合辑/科幻短篇/02-半衰期.txt', bytes: 14157 },
+            { id: 'scifi-03', seq: '03', title: '时间缝里的草莓', path: './ZhaoHang小说合辑/科幻短篇/03-时间缝里的草莓.txt', bytes: 23436 },
+            { id: 'scifi-04', seq: '04', title: '氦声', path: './ZhaoHang小说合辑/科幻短篇/04-氦声.txt', bytes: 19187 },
+            { id: 'scifi-05', seq: '05', title: '残差', path: './ZhaoHang小说合辑/科幻短篇/05-残差.txt', bytes: 18888 },
+            { id: 'scifi-06', seq: '06', title: '不落地的雨', path: './ZhaoHang小说合辑/科幻短篇/06-不落地的雨.txt', bytes: 17689 },
+            { id: 'scifi-07', seq: '07', title: '四百公里的喵', path: './ZhaoHang小说合辑/科幻短篇/07-四百公里的喵.txt', bytes: 18379 },
+            { id: 'scifi-08', seq: '08', title: '她的钟', path: './ZhaoHang小说合辑/科幻短篇/08-她的钟.txt', bytes: 17161 },
+            { id: 'scifi-09', seq: '09', title: '铅垂线', path: './ZhaoHang小说合辑/科幻短篇/09-铅垂线.txt', bytes: 17533 },
+            { id: 'scifi-10', seq: '10', title: '风筝线', path: './ZhaoHang小说合辑/科幻短篇/10-风筝线.txt', bytes: 16771 },
+          ],
+        },
+        {
+          id: 'yichao',
+          name: '长篇·蚁巢',
+          unit: '章',
+          countLabel: '16 章长篇连载',
+          tagline: '地下秩序与微光突围，一场关于生存、规则与觉醒的长篇叙事。',
+          accent: {
+            badge: 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-200/70 dark:border-emerald-500/25',
+            iconBg: 'bg-emerald-100/80 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
+            glow: 'group-hover:border-emerald-300/80 dark:group-hover:border-emerald-500/40',
+          },
+          iconSvg: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`,
+          previewTitles: ['第一章', '第八章', '第十六章'],
+          stories: [
+            { id: 'yichao-01', seq: '01', title: '蚁巢 · 第一章', path: './ZhaoHang小说合辑/长篇·蚁巢/01-蚁巢-第一章.txt', bytes: 15688 },
+            { id: 'yichao-02', seq: '02', title: '蚁巢 · 第二章', path: './ZhaoHang小说合辑/长篇·蚁巢/02-蚁巢-第二章.txt', bytes: 14029 },
+            { id: 'yichao-03', seq: '03', title: '蚁巢 · 第三章', path: './ZhaoHang小说合辑/长篇·蚁巢/03-蚁巢-第三章.txt', bytes: 14387 },
+            { id: 'yichao-04', seq: '04', title: '蚁巢 · 第四章', path: './ZhaoHang小说合辑/长篇·蚁巢/04-蚁巢-第四章.txt', bytes: 13920 },
+            { id: 'yichao-05', seq: '05', title: '蚁巢 · 第五章', path: './ZhaoHang小说合辑/长篇·蚁巢/05-蚁巢-第五章.txt', bytes: 13088 },
+            { id: 'yichao-06', seq: '06', title: '蚁巢 · 第六章', path: './ZhaoHang小说合辑/长篇·蚁巢/06-蚁巢-第六章.txt', bytes: 12657 },
+            { id: 'yichao-07', seq: '07', title: '蚁巢 · 第七章', path: './ZhaoHang小说合辑/长篇·蚁巢/07-蚁巢-第七章.txt', bytes: 12929 },
+            { id: 'yichao-08', seq: '08', title: '蚁巢 · 第八章', path: './ZhaoHang小说合辑/长篇·蚁巢/08-蚁巢-第八章.txt', bytes: 12988 },
+            { id: 'yichao-09', seq: '09', title: '蚁巢 · 第九章', path: './ZhaoHang小说合辑/长篇·蚁巢/09-蚁巢-第九章.txt', bytes: 13981 },
+            { id: 'yichao-10', seq: '10', title: '蚁巢 · 第十章', path: './ZhaoHang小说合辑/长篇·蚁巢/10-蚁巢-第十章.txt', bytes: 15192 },
+            { id: 'yichao-11', seq: '11', title: '蚁巢 · 第十一章', path: './ZhaoHang小说合辑/长篇·蚁巢/11-蚁巢-第十一章.txt', bytes: 13423 },
+            { id: 'yichao-12', seq: '12', title: '蚁巢 · 第十二章', path: './ZhaoHang小说合辑/长篇·蚁巢/12-蚁巢-第十二章.txt', bytes: 13180 },
+            { id: 'yichao-13', seq: '13', title: '蚁巢 · 第十三章', path: './ZhaoHang小说合辑/长篇·蚁巢/13-蚁巢-第十三章.txt', bytes: 13781 },
+            { id: 'yichao-14', seq: '14', title: '蚁巢 · 第十四章', path: './ZhaoHang小说合辑/长篇·蚁巢/14-蚁巢-第十四章.txt', bytes: 13057 },
+            { id: 'yichao-15', seq: '15', title: '蚁巢 · 第十五章', path: './ZhaoHang小说合辑/长篇·蚁巢/15-蚁巢-第十五章.txt', bytes: 13315 },
+            { id: 'yichao-16', seq: '16', title: '蚁巢 · 第十六章', path: './ZhaoHang小说合辑/长篇·蚁巢/16-蚁巢-第十六章.txt', bytes: 15980 },
+          ],
+        },
+      ],
+    };
+
+    /**
+     * ============================================================================
+     *  工具函数与图标库
+     * ============================================================================
+     */
+    const ICONS = {
+      github: `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>`,
+      mail: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
+      bilibili: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="3" /><path stroke-linecap="round" d="M8 3l2.5 3M16 3l-2.5 3M9 11.5v2M15 11.5v2"/></svg>`,
+      xiaohongshu: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>`,
+    };
+
+    // 生成安全的占位图链接，避免外部图片无法加载时破图
+    function getFallbackImg(text, w = 800, h = 600) {
+      return `https://placehold.co/${w}x${h}/e7e5e4/57534e?text=${encodeURIComponent(text || 'Image')}`;
+    }
+
+    // 轻提示 Toast 控制
+    let toastTimer = null;
+    function showToast(message) {
+      const toastEl = document.getElementById('toast');
+      if (!toastEl) return;
+      toastEl.textContent = message;
+      toastEl.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+      toastEl.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+        toastEl.classList.remove('opacity-100', 'translate-y-0');
+      }, 2400);
+    }
+
+    // 兼容性极佳的剪贴板复制（支持 iFrame 环境）
+    function copyToClipboard(text, successMsg = '已复制到剪贴板') {
+      try {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        if (ok) {
+          showToast(successMsg);
+        } else {
+          showToast('复制失败，请手动复制');
+        }
+      } catch (err) {
+        showToast('当前环境不支持自动复制');
+      }
+    }
+
+    /**
+     * ============================================================================
+     *  深色 / 浅色模式切换
+     * ============================================================================
+     */
+    function initTheme() {
+      const htmlEl = document.documentElement;
+      const sunIcons = [document.getElementById('icon-sun'), document.getElementById('reader-icon-sun')].filter(Boolean);
+      const moonIcons = [document.getElementById('icon-moon'), document.getElementById('reader-icon-moon')].filter(Boolean);
+      const toggleBtns = [document.getElementById('theme-toggle-btn'), document.getElementById('reader-theme-toggle-btn')].filter(Boolean);
+
+      const applyTheme = (isDark) => {
+        htmlEl.classList.toggle('dark', isDark);
+        sunIcons.forEach((el) => el.classList.toggle('hidden', !isDark));
+        moonIcons.forEach((el) => el.classList.toggle('hidden', isDark));
+      };
+
+      // 读取本地存储或系统偏好
+      let savedTheme = null;
+      try {
+        savedTheme = localStorage.getItem('personal-site-theme');
+      } catch (e) {
+        // 忽略受限环境下的 localStorage 异常
+      }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+      toggleBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const nextIsDark = !htmlEl.classList.contains('dark');
+          applyTheme(nextIsDark);
+          try {
+            localStorage.setItem('personal-site-theme', nextIsDark ? 'dark' : 'light');
+          } catch (e) {}
+        });
+      });
+    }
+
+    /**
+     * ============================================================================
+     *  移动端导航菜单控制
+     * ============================================================================
+     */
+    function initMobileMenu() {
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      const iconOpen = document.getElementById('icon-menu-open');
+      const iconClose = document.getElementById('icon-menu-close');
+
+      if (!btn || !menu) return;
+
+      const setMenuState = (open) => {
+        menu.classList.toggle('hidden', !open);
+        iconOpen.classList.toggle('hidden', open);
+        iconClose.classList.toggle('hidden', !open);
+        btn.setAttribute('aria-expanded', String(open));
+      };
+
+      btn.addEventListener('click', () => {
+        const isCurrentlyHidden = menu.classList.contains('hidden');
+        setMenuState(isCurrentlyHidden);
+      });
+
+      menu.querySelectorAll('.mobile-nav-link').forEach((link) => {
+        link.addEventListener('click', () => setMenuState(false));
+      });
+    }
+
+    /**
+     * ============================================================================
+     *  渲染模块：个人简介 Hero 与页脚
+     * ============================================================================
+     */
+    function renderProfile() {
+      const { profile } = SITE_DATA;
+
+      document.getElementById('nav-logo-badge').textContent = profile.logoChar;
+      document.getElementById('nav-brand-name').textContent = profile.name;
+      document.getElementById('hero-name').textContent = `你好，我是 ${profile.name}`;
+      document.getElementById('hero-bio').textContent = profile.bio;
+
+      const footerNameEl = document.getElementById('footer-name');
+      const footerYearEl = document.getElementById('footer-year');
+      if (footerNameEl) footerNameEl.textContent = profile.name;
+      if (footerYearEl) footerYearEl.textContent = String(new Date().getFullYear());
+
+      // 头像加载与降级占位图
+      const avatarEl = document.getElementById('hero-avatar');
+      avatarEl.src = profile.avatar;
+      avatarEl.onerror = function () {
+        this.onerror = null;
+        this.src = getFallbackImg(profile.name, 256, 256);
+      };
+
+      // 状态标签
+      document.getElementById('hero-status-tags').innerHTML = profile.statusTags
+        .map(
+          (tag) => `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-stone-100 dark:bg-stone-800/90 text-stone-700 dark:text-stone-300 border border-stone-200/70 dark:border-stone-700/70">
+            <span class="w-1.5 h-1.5 rounded-full ${tag.dotColor}"></span>
+            ${tag.text}
+          </span>
+        `
+        )
+        .join('');
+
+      // 快捷复制邮箱按钮
+      const copyEmailBtn = document.getElementById('hero-copy-email-btn');
+      if (copyEmailBtn) {
+        copyEmailBtn.addEventListener('click', () => {
+          copyToClipboard(profile.email, `已复制邮箱：${profile.email}`);
+        });
+      }
+
+      // 社交图标链接
+      const socialsEl = document.getElementById('hero-socials');
+      socialsEl.innerHTML = profile.socials
+        .map((item, idx) => {
+          const iconSvg = ICONS[item.icon] || '';
+          if (item.type === 'email') {
+            return `
+              <button
+                type="button"
+                data-social-email="${idx}"
+                title="${item.name}"
+                aria-label="${item.name}"
+                class="p-2.5 rounded-xl border border-stone-200/80 dark:border-stone-800 bg-paper-light dark:bg-paper-dark text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 hover:border-stone-300 dark:hover:border-stone-600 transition-all active:scale-95"
+              >
+                ${iconSvg}
+              </button>
+            `;
+          }
+          return `
+            <a
+              href="${item.url}"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="${item.name}"
+              aria-label="${item.name}"
+              class="p-2.5 rounded-xl border border-stone-200/80 dark:border-stone-800 bg-paper-light dark:bg-paper-dark text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 hover:border-stone-300 dark:hover:border-stone-600 transition-all active:scale-95"
+            >
+              ${iconSvg}
+            </a>
+          `;
+        })
+        .join('');
+
+      socialsEl.querySelectorAll('[data-social-email]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-social-email'));
+          const item = profile.socials[idx];
+          if (item) copyToClipboard(item.value, `已复制邮箱：${item.value}`);
+        });
+      });
+    }
+
+    /**
+     * ============================================================================
+     *  渲染模块：学习 · Study
+     * ============================================================================
+     */
+    function renderStudy() {
+      const { skills, books } = SITE_DATA.study;
+
+      document.getElementById('study-skills-grid').innerHTML = skills
+        .map(
+          (skill) => `
+          <div class="p-5 sm:p-6 rounded-2xl bg-surface-light dark:bg-surface-dark border border-stone-200/80 dark:border-stone-800/90 shadow-soft dark:shadow-soft-dark flex flex-col justify-between gap-4">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <h4 class="font-semibold text-base text-stone-900 dark:text-stone-100">${skill.name}</h4>
+                <span class="px-2.5 py-0.5 rounded-lg text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 shrink-0">${skill.status}</span>
+              </div>
+              <p class="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">${skill.description}</p>
+            </div>
+            <div>
+              <div class="flex items-center justify-between text-xs text-stone-400 dark:text-stone-500 mb-1.5">
+                <span>当前进度</span>
+                <span class="font-mono font-medium text-stone-700 dark:text-stone-300">${skill.progress}%</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+                <div class="h-full rounded-full ${skill.colorClass} transition-all duration-500" style="width: ${skill.progress}%"></div>
+              </div>
+            </div>
+          </div>
+        `
+        )
+        .join('');
+
+      document.getElementById('study-books-grid').innerHTML = books
+        .map(
+          (book) => `
+          <div class="p-5 rounded-2xl bg-surface-light dark:bg-surface-dark border border-stone-200/80 dark:border-stone-800/90 shadow-soft dark:shadow-soft-dark flex flex-col justify-between gap-3">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">${book.status}</span>
+                <span class="text-xs font-mono text-stone-400 dark:text-stone-500">${book.progress}</span>
+              </div>
+              <h4 class="font-semibold text-sm sm:text-base text-stone-900 dark:text-stone-100 leading-snug">${book.title}</h4>
+              <p class="text-xs text-stone-400 dark:text-stone-500 mt-0.5">${book.author}</p>
+            </div>
+            <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed pt-2 border-t border-stone-100 dark:border-stone-800/80">${book.note}</p>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    /**
+     * ============================================================================
+     *  渲染模块：生活 · Life (Bento Grid 与随笔弹窗)
+     * ============================================================================
+     */
+    function renderLife() {
+      const grid = document.getElementById('life-bento-grid');
+      if (!grid) return;
+
+      grid.innerHTML = SITE_DATA.life
+        .map(
+          (item) => `
+          <button
+            type="button"
+            data-life-id="${item.id}"
+            class="group relative overflow-hidden rounded-3xl border border-stone-200/80 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-left shadow-soft dark:shadow-soft-dark focus:outline-none focus:ring-2 focus:ring-stone-900/20 dark:focus:ring-stone-100/20 ${item.spanClass}"
+          >
+            <img
+              src="${item.image}"
+              alt="${item.title}"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='${getFallbackImg(item.title, 800, 600)}';"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent"></div>
+            <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5 text-white">
+              <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-white/20 backdrop-blur-md mb-2">${item.category}</span>
+              <h3 class="text-base sm:text-lg font-bold leading-snug">${item.title}</h3>
+              <p class="mt-1 text-xs text-stone-200/90 line-clamp-2">${item.summary}</p>
+            </div>
+          </button>
+        `
+        )
+        .join('');
+
+      grid.querySelectorAll('[data-life-id]').forEach((card) => {
+        card.addEventListener('click', () => {
+          const id = card.getAttribute('data-life-id');
+          const found = SITE_DATA.life.find((x) => x.id === id);
+          if (found) openLifeModal(found);
+        });
+      });
+    }
+
+    function openLifeModal(item) {
+      const modal = document.getElementById('life-modal');
+      const img = document.getElementById('life-modal-img');
+      img.src = item.image;
+      img.alt = item.title;
+      img.onerror = function () {
+        this.onerror = null;
+        this.src = getFallbackImg(item.title, 1000, 625);
+      };
+
+      document.getElementById('life-modal-category').textContent = item.category;
+      document.getElementById('life-modal-meta').textContent = item.date;
+      document.getElementById('life-modal-title').textContent = item.title;
+      document.getElementById('life-modal-essay').innerHTML = item.essay
+        .map((p) => `<p>${p}</p>`)
+        .join('');
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeLifeModal() {
+      const modal = document.getElementById('life-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    /**
+     * ============================================================================
+     *  渲染模块：小说作品集 · Novels（四大分类入口卡片 + 全屏选篇阅读界面）
+     * ============================================================================
+     */
+    const NOVEL_FONT_CLASSES = {
+      sm: ['text-sm', 'leading-[1.85]'],
+      md: ['text-base', 'leading-[1.9]'],
+      lg: ['text-lg', 'leading-[2.0]'],
+    };
+
+    // 内存缓存：存放用户通过“加载本地小说文件夹预览”导入的 .txt 文件
+    const LOCAL_NOVEL_FILES = new Map();
+    let LOCAL_LOADED_TXT_COUNT = 0;
+
+    const READER_STATE = {
+      currentCategoryId: null,
+      currentStoryId: null,
+      lastReadByCategory: {}, // 会话内记忆各分类上次阅读到的篇目
+      fontSize: 'md',
+    };
+
+    // 根据字节数估算中文字数
+    function formatEstimatedChars(bytes) {
+      const chars = Math.round(bytes / 3);
+      if (chars >= 10000) {
+        return `约 ${(chars / 10000).toFixed(1)} 万字`;
+      }
+      if (chars >= 1000) {
+        return `约 ${(chars / 1000).toFixed(1)}k 字`;
+      }
+      return `约 ${chars} 字`;
+    }
+
+    // 根据字节数估算阅读时长
+    function formatEstimatedReadTime(bytes) {
+      const mins = Math.max(1, Math.round(bytes / 1500));
+      return `约 ${mins} 分钟`;
+    }
+
+    // 提取路径中的纯文件名
+    function getFileNameFromPath(path) {
+      return (path || '').split('/').pop();
+    }
+
+    // 优先按相对路径匹配本地缓存，其次按纯文件名匹配
+    function findLocalNovelText(path) {
+      const normalized = (path || '').replace(/^\.\//, '');
+      if (LOCAL_NOVEL_FILES.has(normalized)) return LOCAL_NOVEL_FILES.get(normalized);
+      const fileName = getFileNameFromPath(normalized);
+      if (LOCAL_NOVEL_FILES.has(fileName)) return LOCAL_NOVEL_FILES.get(fileName);
+      return null;
+    }
+
+    // 转义 HTML 特殊字符，防止 TXT 文本破坏排版
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // 智能解码 ArrayBuffer：优先严格 UTF-8，若触发异常自动回退至 GB18030
+    function decodeTxtBuffer(buffer) {
+      try {
+        return new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+      } catch (e) {
+        try {
+          return new TextDecoder('gb18030').decode(buffer);
+        } catch (err) {
+          return new TextDecoder('utf-8').decode(buffer);
+        }
+      }
+    }
+
+    // 将纯文本格式化为舒适的中文阅读段落
+    function formatTxtToHtml(rawText) {
+      const normalized = rawText.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+      const lines = normalized
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0);
+
+      if (lines.length === 0) {
+        return '<p class="text-stone-400 dark:text-stone-500 text-center py-10 font-sans">文件内容为空。</p>';
+      }
+
+      return lines
+        .map((line) => {
+          const safe = escapeHtml(line);
+          if (/^(第[一二三四五六七八九十百千万0-9]+[章节回篇]|={3,}|-{3,}|\*{3,})/.test(line) && line.length <= 36) {
+            return `<h3 class="pt-4 pb-1 font-sans font-bold text-stone-900 dark:text-stone-100 text-lg tracking-wide">${safe}</h3>`;
+          }
+          return `<p class="indent-[2em] text-justify">${safe}</p>`;
+        })
+        .join('');
+    }
+
+    // 渲染主页面的 4 张分类入口卡片
+    function renderNovelCategoryCards() {
+      const grid = document.getElementById('novel-categories-grid');
+      if (!grid) return;
+
+      grid.innerHTML = SITE_DATA.novelCategories
+        .map((cat) => {
+          const totalBytes = cat.stories.reduce((sum, s) => sum + s.bytes, 0);
+          const localReadyCount = cat.stories.filter((s) => findLocalNovelText(s.path) !== null).length;
+
+          return `
+            <button
+              type="button"
+              data-open-category="${cat.id}"
+              class="group text-left p-6 sm:p-7 rounded-3xl bg-surface-light dark:bg-surface-dark border border-stone-200/80 dark:border-stone-800/90 shadow-soft dark:shadow-soft-dark hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col justify-between gap-6 focus:outline-none focus:ring-2 focus:ring-stone-900/20 dark:focus:ring-stone-100/20 ${cat.accent.glow}"
+            >
+              <div>
+                <!-- 顶部：分类图标 + 篇数标签 -->
+                <div class="flex items-center justify-between gap-3 mb-5">
+                  <div class="w-11 h-11 rounded-2xl flex items-center justify-center ${cat.accent.iconBg} group-hover:scale-105 transition-transform duration-300">
+                    ${cat.iconSvg}
+                  </div>
+                  <div class="flex items-center gap-2">
+                    ${localReadyCount > 0 ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">本地已载入 ${localReadyCount}/${cat.stories.length}</span>` : ''}
+                    <span class="px-3 py-1 rounded-full text-xs font-medium ${cat.accent.badge}">
+                      ${cat.countLabel}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- 分类标题与氛围简介 -->
+                <h3 class="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-50 tracking-tight group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                  ${cat.name}
+                </h3>
+                <p class="mt-2 text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+                  ${cat.tagline}
+                </p>
+
+                <!-- 代表作预览标签 -->
+                <div class="mt-5 flex flex-wrap items-center gap-2">
+                  ${cat.previewTitles
+                    .map(
+                      (t) => `
+                    <span class="px-2.5 py-1 rounded-lg text-xs bg-stone-100/90 dark:bg-stone-800/80 text-stone-600 dark:text-stone-300 border border-stone-200/60 dark:border-stone-700/60">
+                      ${t}
+                    </span>
+                  `
+                    )
+                    .join('')}
+                  <span class="text-xs text-stone-400 dark:text-stone-500">等</span>
+                </div>
+              </div>
+
+              <!-- 底部统计与“进入阅读”引导 -->
+              <div class="pt-4 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between text-xs sm:text-sm">
+                <span class="text-stone-400 dark:text-stone-500 font-mono">共 ${formatEstimatedChars(totalBytes)}</span>
+                <span class="inline-flex items-center gap-1.5 font-semibold text-stone-800 dark:text-stone-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                  <span>进入阅读</span>
+                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </div>
+            </button>
+          `;
+        })
+        .join('');
+
+      grid.querySelectorAll('[data-open-category]').forEach((card) => {
+        card.addEventListener('click', () => {
+          const categoryId = card.getAttribute('data-open-category');
+          openCategoryReader(categoryId);
+        });
+      });
+    }
+
+    // 渲染阅读器顶部的快捷分类切换 Pills（桌面端 + 紧凑端）
+    function renderReaderCategorySwitcher() {
+      const desktopEl = document.getElementById('reader-category-switcher');
+      const compactEl = document.getElementById('reader-category-switcher-compact');
+
+      const html = SITE_DATA.novelCategories
+        .map((cat) => {
+          const isActive = cat.id === READER_STATE.currentCategoryId;
+          const activeClass = isActive
+            ? 'bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 border-stone-900 dark:border-stone-100'
+            : 'bg-paper-light dark:bg-paper-dark text-stone-600 dark:text-stone-300 border-stone-200/80 dark:border-stone-700 hover:border-stone-400 dark:hover:border-stone-500';
+          return `
+            <button
+              type="button"
+              data-switch-category="${cat.id}"
+              class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all active:scale-95 ${activeClass}"
+            >
+              ${cat.name}
+            </button>
+          `;
+        })
+        .join('');
+
+      [desktopEl, compactEl].forEach((container) => {
+        if (!container) return;
+        container.innerHTML = html;
+        container.querySelectorAll('[data-switch-category]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const nextCatId = btn.getAttribute('data-switch-category');
+            if (nextCatId !== READER_STATE.currentCategoryId) {
+              selectCategoryInReader(nextCatId);
+            }
+          });
+        });
+      });
+    }
+
+    // 渲染左侧边栏的篇目/章节列表
+    function renderReaderStoryList(category) {
+      const listEl = document.getElementById('reader-story-list');
+      document.getElementById('reader-sidebar-title').textContent = category.name;
+      document.getElementById('reader-sidebar-count').textContent = `${category.stories.length} ${category.unit}`;
+      document.getElementById('reader-sidebar-tagline').textContent = category.tagline;
+      document.getElementById('reader-topbar-category-title').textContent = category.name;
+
+      listEl.innerHTML = category.stories
+        .map((story) => {
+          const isActive = story.id === READER_STATE.currentStoryId;
+          const isLocal = findLocalNovelText(story.path) !== null;
+          const itemClass = isActive
+            ? 'bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 shadow-sm'
+            : 'text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/80';
+          const seqClass = isActive
+            ? 'text-stone-300 dark:text-stone-600'
+            : 'text-stone-400 dark:text-stone-500';
+          const metaClass = isActive
+            ? 'text-stone-300 dark:text-stone-600'
+            : 'text-stone-400 dark:text-stone-500';
+
+          return `
+            <button
+              type="button"
+              data-select-story="${story.id}"
+              class="w-full text-left px-3.5 py-3 rounded-xl transition-all flex items-center justify-between gap-2.5 ${itemClass}"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="text-xs font-mono shrink-0 ${seqClass}">${story.seq}</span>
+                <span class="text-sm font-medium truncate">${story.title}</span>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                ${isLocal ? '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500" title="已载入本地文件"></span>' : ''}
+                <span class="text-[11px] font-mono ${metaClass}">${formatEstimatedChars(story.bytes).replace('约 ', '')}</span>
+              </div>
+            </button>
+          `;
+        })
+        .join('');
+
+      listEl.querySelectorAll('[data-select-story]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const storyId = btn.getAttribute('data-select-story');
+          loadStoryInReader(category, storyId);
+          setReaderSidebarOpen(false);
+        });
+      });
+    }
+
+    // 控制移动端目录抽屉展开/收起
+    function setReaderSidebarOpen(isOpen) {
+      const sidebar = document.getElementById('reader-sidebar');
+      const backdrop = document.getElementById('reader-sidebar-backdrop');
+      if (!sidebar || !backdrop) return;
+      sidebar.classList.toggle('-translate-x-full', !isOpen);
+      backdrop.classList.toggle('hidden', !isOpen);
+    }
+
+    // 应用阅读器字号样式
+    function applyReaderFontSize(sizeKey) {
+      READER_STATE.fontSize = sizeKey;
+      const bodyEl = document.getElementById('novel-reader-body');
+      if (bodyEl) {
+        bodyEl.classList.remove('text-sm', 'leading-[1.85]', 'text-base', 'leading-[1.9]', 'text-lg', 'leading-[2.0]');
+        const classes = NOVEL_FONT_CLASSES[sizeKey] || NOVEL_FONT_CLASSES.md;
+        bodyEl.classList.add(...classes);
+      }
+
+      document.querySelectorAll('.novel-font-btn').forEach((btn) => {
+        const isCurrent = btn.getAttribute('data-font-size') === sizeKey;
+        btn.classList.toggle('bg-stone-900', isCurrent);
+        btn.classList.toggle('text-stone-50', isCurrent);
+        btn.classList.toggle('dark:bg-stone-100', isCurrent);
+        btn.classList.toggle('dark:text-stone-900', isCurrent);
+        btn.classList.toggle('text-stone-500', !isCurrent);
+        btn.classList.toggle('dark:text-stone-400', !isCurrent);
+      });
+    }
+
+    // 更新底部“上一篇/上一章”与“下一篇/下一章”导航
+    function updateReaderBottomNav(category, currentIdx) {
+      const prevBtn = document.getElementById('reader-prev-btn');
+      const nextBtn = document.getElementById('reader-next-btn');
+      const prevHint = document.getElementById('reader-prev-hint');
+      const nextHint = document.getElementById('reader-next-hint');
+      const prevTitle = document.getElementById('reader-prev-title');
+      const nextTitle = document.getElementById('reader-next-title');
+
+      const prevLabel = category.unit === '章' ? '上一章' : '上一篇';
+      const nextLabel = category.unit === '章' ? '下一章' : '下一篇';
+      const prevStory = currentIdx > 0 ? category.stories[currentIdx - 1] : null;
+      const nextStory = currentIdx < category.stories.length - 1 ? category.stories[currentIdx + 1] : null;
+
+      prevHint.textContent = prevLabel;
+      prevBtn.disabled = !prevStory;
+      prevTitle.textContent = prevStory ? `${prevStory.seq} · ${prevStory.title}` : `已是本分类首${category.unit}`;
+      prevBtn.onclick = prevStory ? () => loadStoryInReader(category, prevStory.id) : null;
+
+      nextHint.textContent = nextLabel;
+      nextBtn.disabled = !nextStory;
+      nextTitle.textContent = nextStory ? `${nextStory.seq} · ${nextStory.title}` : `已是本分类末${category.unit}`;
+      nextBtn.onclick = nextStory ? () => loadStoryInReader(category, nextStory.id) : null;
+    }
+
+    // 当 fetch 无法读取本地 TXT 时，展示清晰的引导面板
+    function renderReaderFallback(story) {
+      const bodyEl = document.getElementById('novel-reader-body');
+      bodyEl.innerHTML = `
+        <div class="my-6 p-6 sm:p-8 rounded-3xl border border-dashed border-stone-300 dark:border-stone-700 bg-surface-light dark:bg-surface-dark text-center space-y-4 font-sans">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <div class="space-y-1.5">
+            <h3 class="text-base font-semibold text-stone-900 dark:text-stone-100">当前预览环境尚未挂载 TXT 文件</h3>
+            <p class="text-xs sm:text-sm text-stone-500 dark:text-stone-400 max-w-md mx-auto leading-relaxed">
+              部署至 GitHub Pages 时，请将解压后的 <code class="px-1.5 py-0.5 rounded bg-stone-200/70 dark:bg-stone-800 font-mono text-xs">ZhaoHang小说合辑</code> 文件夹放在与 <code class="px-1.5 py-0.5 rounded bg-stone-200/70 dark:bg-stone-800 font-mono text-xs">index.html</code> 同级的根目录即可自动在线阅读。
+            </p>
+            <p class="text-xs text-stone-400 dark:text-stone-500 font-mono pt-1 break-all">目标路径：${escapeHtml(story.path)}</p>
+          </div>
+          <div class="pt-2">
+            <button
+              type="button"
+              id="reader-fallback-load-btn"
+              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 text-xs sm:text-sm font-medium hover:opacity-90 transition-all active:scale-95"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+              </svg>
+              <span>选择本地 ZhaoHang小说合辑 文件夹</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      const triggerBtn = document.getElementById('reader-fallback-load-btn');
+      if (triggerBtn) {
+        triggerBtn.addEventListener('click', () => {
+          document.getElementById('local-novel-folder-input').click();
+        });
+      }
+    }
+
+    // 在右侧阅读区加载指定篇目（优先本地缓存，其次 fetch 相对路径）
+    async function loadStoryInReader(category, storyId) {
+      const idx = Math.max(0, category.stories.findIndex((s) => s.id === storyId));
+      const story = category.stories[idx];
+      if (!story) return;
+
+      READER_STATE.currentCategoryId = category.id;
+      READER_STATE.currentStoryId = story.id;
+      READER_STATE.lastReadByCategory[category.id] = story.id;
+
+      // 更新左侧目录高亮与底部上下篇导航
+      renderReaderStoryList(category);
+      updateReaderBottomNav(category, idx);
+
+      // 更新右侧标题与元信息
+      const badgeEl = document.getElementById('reader-story-badge');
+      badgeEl.className = `px-2.5 py-1 rounded-lg font-medium ${category.accent.badge}`;
+      badgeEl.textContent = `${category.name} · #${story.seq}`;
+      document.getElementById('reader-story-meta').textContent = `${formatEstimatedChars(story.bytes)} · ${formatEstimatedReadTime(story.bytes)}`;
+      document.getElementById('reader-story-title').textContent = story.title;
+
+      const scrollArea = document.getElementById('novel-reader-scroll');
+      const progressEl = document.getElementById('novel-reading-progress');
+      const bodyEl = document.getElementById('novel-reader-body');
+
+      scrollArea.scrollTop = 0;
+      progressEl.style.width = '0%';
+      bodyEl.innerHTML = `<div class="py-12 text-center text-sm font-sans text-stone-400 dark:text-stone-500">正在加载正文内容...</div>`;
+
+      // 1. 优先从本地导入缓存中读取
+      const localText = findLocalNovelText(story.path);
+      if (localText !== null) {
+        bodyEl.innerHTML = formatTxtToHtml(localText);
+        return;
+      }
+
+      // 2. 否则从 GitHub Pages 相对路径 fetch 并智能解码 UTF-8 / GB18030
+      try {
+        const response = await fetch(encodeURI(story.path));
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const buffer = await response.arrayBuffer();
+        const text = decodeTxtBuffer(buffer);
+        if (/^\s*<!DOCTYPE\s+html/i.test(text) || /^\s*<html[\s>]/i.test(text)) {
+          throw new Error('Unexpected HTML response');
+        }
+        // 防止快速切换篇目时旧请求覆盖新内容
+        if (READER_STATE.currentStoryId === story.id) {
+          bodyEl.innerHTML = formatTxtToHtml(text);
+        }
+      } catch (err) {
+        if (READER_STATE.currentStoryId === story.id) {
+          renderReaderFallback(story);
+        }
+      }
+    }
+
+    // 切换阅读器内的当前分类，自动定位到上次阅读篇目或首篇
+    function selectCategoryInReader(categoryId) {
+      const category = SITE_DATA.novelCategories.find((c) => c.id === categoryId);
+      if (!category) return;
+      READER_STATE.currentCategoryId = category.id;
+      renderReaderCategorySwitcher();
+      const targetStoryId = READER_STATE.lastReadByCategory[category.id] || category.stories[0].id;
+      loadStoryInReader(category, targetStoryId);
+    }
+
+    // 打开全屏分类选篇与阅读界面
+    function openCategoryReader(categoryId) {
+      const overlay = document.getElementById('novel-reader-overlay');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+      document.body.classList.add('overflow-hidden');
+      applyReaderFontSize(READER_STATE.fontSize);
+      selectCategoryInReader(categoryId);
+    }
+
+    // 关闭全屏阅读界面返回主页
+    function closeCategoryReader() {
+      setReaderSidebarOpen(false);
+      const overlay = document.getElementById('novel-reader-overlay');
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // 更新主页面与阅读器内的“本地已载入”状态提示
+    function updateLocalLoadedBadges() {
+      const mainBadge = document.getElementById('local-loaded-badge');
+      const readerLabel = document.getElementById('reader-load-local-label');
+      if (LOCAL_LOADED_TXT_COUNT > 0) {
+        if (mainBadge) {
+          mainBadge.textContent = `已载入 ${LOCAL_LOADED_TXT_COUNT} 份`;
+          mainBadge.classList.remove('hidden');
+        }
+        if (readerLabel) {
+          readerLabel.textContent = `已载入 ${LOCAL_LOADED_TXT_COUNT} 份`;
+        }
+      }
+    }
+
+    // 处理用户选择的本地小说文件夹（读取所有 .txt 文件到内存缓存）
+    async function handleLocalFolderImport(fileList) {
+      const txtFiles = Array.from(fileList || []).filter((f) => f.name.toLowerCase().endsWith('.txt'));
+      if (txtFiles.length === 0) {
+        showToast('未在所选文件夹中找到 .txt 小说文件');
+        return;
+      }
+
+      let loadedCount = 0;
+      for (const file of txtFiles) {
+        try {
+          const buffer = await file.arrayBuffer();
+          const text = decodeTxtBuffer(buffer);
+          const relPath = (file.webkitRelativePath || '').replace(/^\.\//, '');
+          if (relPath) LOCAL_NOVEL_FILES.set(relPath, text);
+          LOCAL_NOVEL_FILES.set(file.name, text);
+          loadedCount++;
+        } catch (err) {
+          // 跳过异常文件，继续载入其余文件
+        }
+      }
+
+      LOCAL_LOADED_TXT_COUNT = loadedCount;
+      updateLocalLoadedBadges();
+      renderNovelCategoryCards();
+      showToast(`已成功载入 ${loadedCount} 份本地小说文件，点击即可阅读`);
+
+      // 若全屏阅读器正处于打开状态，立即刷新当前正在查看的篇目
+      const overlay = document.getElementById('novel-reader-overlay');
+      if (!overlay.classList.contains('hidden') && READER_STATE.currentCategoryId) {
+        const currentCat = SITE_DATA.novelCategories.find((c) => c.id === READER_STATE.currentCategoryId);
+        if (currentCat) {
+          loadStoryInReader(currentCat, READER_STATE.currentStoryId || currentCat.stories[0].id);
+        }
+      }
+    }
+
+    function initNovelInteractions() {
+      const scrollArea = document.getElementById('novel-reader-scroll');
+      const progressEl = document.getElementById('novel-reading-progress');
+      const folderInput = document.getElementById('local-novel-folder-input');
+      const loadFolderBtn = document.getElementById('load-local-folder-btn');
+      const readerLoadLocalBtn = document.getElementById('reader-load-local-btn');
+
+      // 字号切换绑定
+      document.querySelectorAll('.novel-font-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          applyReaderFontSize(btn.getAttribute('data-font-size'));
+        });
+      });
+
+      // 阅读进度条实时更新
+      scrollArea.addEventListener('scroll', () => {
+        const scrollable = scrollArea.scrollHeight - scrollArea.clientHeight;
+        const percent = scrollable > 0 ? Math.min(100, Math.round((scrollArea.scrollTop / scrollable) * 100)) : 100;
+        progressEl.style.width = `${percent}%`;
+      });
+
+      // 本地文件夹载入按钮（主页与阅读器内共用）
+      [loadFolderBtn, readerLoadLocalBtn].forEach((btn) => {
+        if (btn) btn.addEventListener('click', () => folderInput.click());
+      });
+
+      folderInput.addEventListener('change', (e) => {
+        handleLocalFolderImport(e.target.files);
+        e.target.value = '';
+      });
+
+      // 移动端目录抽屉开关
+      document.getElementById('reader-sidebar-toggle').addEventListener('click', () => setReaderSidebarOpen(true));
+      document.getElementById('reader-sidebar-close').addEventListener('click', () => setReaderSidebarOpen(false));
+      document.getElementById('reader-sidebar-backdrop').addEventListener('click', () => setReaderSidebarOpen(false));
+    }
+
+    /**
+     * ============================================================================
+     *  全局弹窗与全屏阅读器关闭绑定（点击遮罩或按 ESC 键）
+     * ============================================================================
+     */
+    function initModals() {
+      const lifeModal = document.getElementById('life-modal');
+      const readerOverlay = document.getElementById('novel-reader-overlay');
+
+      document.getElementById('life-modal-close').addEventListener('click', closeLifeModal);
+      document.getElementById('reader-back-btn').addEventListener('click', closeCategoryReader);
+
+      lifeModal.addEventListener('click', (e) => {
+        if (e.target === lifeModal) closeLifeModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (!lifeModal.classList.contains('hidden')) closeLifeModal();
+          if (!readerOverlay.classList.contains('hidden')) closeCategoryReader();
+        }
+      });
+    }
+
+    /**
+     * ============================================================================
+     *  页面初始化入口
+     * ============================================================================
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initMobileMenu();
+      renderProfile();
+      renderStudy();
+      renderLife();
+      renderNovelCategoryCards();
+      initNovelInteractions();
+      initModals();
+    });
+  </script>
+</body>
+</html>
