@@ -154,7 +154,7 @@
                   </svg>
                 </a>
                 <a
-                  href="https://github.com/Egonzhao"
+                  href="https://github.com/egonzhaoyy"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/70 dark:bg-stone-800/50 text-stone-700 dark:text-stone-200 text-sm font-medium hover:bg-stone-100 dark:hover:bg-stone-800 transition-all active:scale-[0.98]"
@@ -234,8 +234,8 @@
           <p class="mt-1.5 text-sm text-stone-500 dark:text-stone-400">选择一个分类，进入专属选篇与沉浸式阅读空间。</p>
         </div>
 
-        <!-- 本地文件夹载入按钮（方便在上传 GitHub Pages 前直接本地阅读预览） -->
-        <div class="flex items-center gap-2.5">
+        <!-- 本地文件夹载入按钮（正式上线版已隐藏） -->
+        <div class="hidden items-center gap-2.5">
           <input
             id="local-novel-folder-input"
             type="file"
@@ -355,14 +355,14 @@
         <!-- 中部：桌面端快捷分类切换 Pills -->
         <div id="reader-category-switcher" class="hidden xl:flex items-center gap-1.5"></div>
 
-        <!-- 右侧：本地导入 + 字号调节 + 深浅主题同步 -->
+        <!-- 右侧：字号调节 + 深浅主题同步 -->
         <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <!-- 本地文件未载入时的快捷按钮 -->
+          <!-- 本地导入按钮（正式上线版已隐藏） -->
           <button
             id="reader-load-local-btn"
             type="button"
             title="加载本地 ZhaoHang小说合辑 文件夹"
-            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+            class="hidden"
           >
             <svg class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
@@ -498,25 +498,25 @@
         logoChar: 'E',
         name: 'Egonzhao',
         bio: '独立开发者与终身学习者。热衷于构建简洁优雅的 Web 产品、探索 AI 应用边界，也在城市的黄昏与一杯手冲咖啡里收集生活微光。',
-        // 部署到 GitHub Pages 时，请将保存的头像重命名为 avatar.jpg 并上传至同级目录，然后将下方路径替换为 './avatar.jpg'
-        avatar: 'watermarked_img_715625990500946290.jpg',
-        email: 'hello@egonzhao.dev',
+        // 正式上线版头像路径：请确保 avatar.jpg 与 index.html 位于仓库根目录同级
+        avatar: './avatar.jpg',
+        email: 'egonzhao@gmail.com',
         statusTags: [
           { text: '持续学习中', dotColor: 'bg-emerald-500' },
           { text: '热爱生活', dotColor: 'bg-amber-500' },
-          { text: '坐标 · 上海', dotColor: 'bg-sky-500' },
+          { text: '坐标 · 杭州', dotColor: 'bg-sky-500' },
         ],
         socials: [
           {
             name: 'GitHub',
             type: 'link',
-            url: 'https://github.com/Egonzhao',
+            url: 'https://github.com/egonzhaoyy',
             icon: 'github',
           },
           {
-            name: '复制邮箱 (hello@egonzhao.dev)',
+            name: '复制邮箱 (egonzhao@gmail.com)',
             type: 'email',
-            value: 'hello@egonzhao.dev',
+            value: 'egonzhao@gmail.com',
             icon: 'mail',
           },
           {
@@ -524,12 +524,6 @@
             type: 'link',
             url: 'https://www.bilibili.com/',
             icon: 'bilibili',
-          },
-          {
-            name: '小红书',
-            type: 'link',
-            url: 'https://www.xiaohongshu.com/',
-            icon: 'xiaohongshu',
           },
         ],
       },
@@ -607,7 +601,7 @@
           id: 'city-walk',
           title: '雨后黄昏的梧桐街',
           category: '城市漫步摄影',
-          date: '2026年10月 · 上海',
+          date: '2026年10月 · 杭州',
           summary: '一场阵雨把街道洗得发亮，拿着相机在老洋房街区走了五公里。',
           image: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1000&q=80',
           spanClass: 'sm:col-span-2 md:col-span-2 md:row-span-2',
@@ -1416,9 +1410,7 @@
       nextBtn.disabled = !nextStory;
       nextTitle.textContent = nextStory ? `${nextStory.seq} · ${nextStory.title}` : `已是本分类末${category.unit}`;
       nextBtn.onclick = nextStory ? () => loadStoryInReader(category, nextStory.id) : null;
-    }
-
-    // 当 fetch 无法读取本地 TXT 时，展示清晰的引导面板
+    // 当在线读取 TXT 失败时，展示面向访客的友好重试面板
     function renderReaderFallback(story) {
       const bodyEl = document.getElementById('novel-reader-body');
       bodyEl.innerHTML = `
@@ -1429,31 +1421,33 @@
             </svg>
           </div>
           <div class="space-y-1.5">
-            <h3 class="text-base font-semibold text-stone-900 dark:text-stone-100">当前预览环境尚未挂载 TXT 文件</h3>
+            <h3 class="text-base font-semibold text-stone-900 dark:text-stone-100">正文暂时无法加载</h3>
             <p class="text-xs sm:text-sm text-stone-500 dark:text-stone-400 max-w-md mx-auto leading-relaxed">
-              部署至 GitHub Pages 时，请将解压后的 <code class="px-1.5 py-0.5 rounded bg-stone-200/70 dark:bg-stone-800 font-mono text-xs">ZhaoHang小说合辑</code> 文件夹放在与 <code class="px-1.5 py-0.5 rounded bg-stone-200/70 dark:bg-stone-800 font-mono text-xs">index.html</code> 同级的根目录即可自动在线阅读。
+              可能是网络波动或对应章节文件尚未同步完成，请稍后点击下方按钮重试。
             </p>
-            <p class="text-xs text-stone-400 dark:text-stone-500 font-mono pt-1 break-all">目标路径：${escapeHtml(story.path)}</p>
           </div>
           <div class="pt-2">
             <button
               type="button"
-              id="reader-fallback-load-btn"
+              id="reader-fallback-retry-btn"
               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-stone-900 text-stone-50 dark:bg-stone-100 dark:text-stone-900 text-xs sm:text-sm font-medium hover:opacity-90 transition-all active:scale-95"
             >
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
-              <span>选择本地 ZhaoHang小说合辑 文件夹</span>
+              <span>重新加载正文</span>
             </button>
           </div>
         </div>
       `;
 
-      const triggerBtn = document.getElementById('reader-fallback-load-btn');
-      if (triggerBtn) {
-        triggerBtn.addEventListener('click', () => {
-          document.getElementById('local-novel-folder-input').click();
+      const retryBtn = document.getElementById('reader-fallback-retry-btn');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+          const currentCat = SITE_DATA.novelCategories.find((c) => c.id === READER_STATE.currentCategoryId);
+          if (currentCat) {
+            loadStoryInReader(currentCat, story.id);
+          }
         });
       }
     }
